@@ -38,9 +38,16 @@ def make_one_pydantic(model_klass, **desired_instance_attrs):
                     value.get('type'),
                     value.get('format', None)
                 )
-            else:
-                # e.g. $ref, 'allAll' which is not yet implemented
-                pass
+                continue
+
+            if '$ref' in value.keys():
+                klass_or_instance = model_klass.__annotations__[prop]
+                if isinstance(klass_or_instance, types.UnionType):
+                    continue
+
+                # klass_or_instance is class here
+                if issubclass(klass_or_instance, Enum):
+                    attrs[prop] = make(klass_or_instance)  # type: ignore
 
     return model_klass(**attrs)
 

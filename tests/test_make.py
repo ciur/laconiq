@@ -33,14 +33,15 @@ def title_generator(items):
         yield item
 
 
-@pytest.mark.skip()
-def test_make_2_instances():
+def test_make_two_node_instances():
     nodes = make(Node, _quantity=2)
 
     assert len(nodes) == 2
+    assert all([
+     isinstance(node, Node) for node in nodes
+    ])
 
 
-@pytest.mark.skip()
 def test_make_one_node():
     node = make(Node)
 
