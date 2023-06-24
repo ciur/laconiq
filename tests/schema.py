@@ -1,8 +1,8 @@
 from datetime import datetime
-from uuid import UUID
 from enum import Enum
+from uuid import UUID
 
-from pydantic import BaseModel, EmailStr, ValidationError, validator
+from pydantic import BaseModel, EmailStr, validator
 
 
 class User(BaseModel):

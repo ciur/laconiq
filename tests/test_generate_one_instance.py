@@ -1,6 +1,7 @@
+from collections import namedtuple
+
 import pytest
 
-from collections import namedtuple
 from laconiq import generate_instance, make
 
 from .schema import User
