@@ -6,12 +6,14 @@ from .generators import generate_for_type
 
 
 def make_one_enum(enum_klass):
+    """Create one random instance of Enum based class"""
     value = choice(list(enum_klass))
 
     return enum_klass(value)
 
 
 def make_enum(enum_klass, _quantity=1):
+    """Create one or multiple random instances of Enum based classes"""
     if _quantity > 1:
         return [make_one_enum(enum_klass) for _ in range(0, _quantity)]
 
