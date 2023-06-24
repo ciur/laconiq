@@ -72,6 +72,15 @@ def test_make_enum():
     assert isinstance(status, OCRStatusEnum)
 
 
+def test_make_two_enum():
+    statuses = make(OCRStatusEnum, _quantity=2)
+
+    assert len(statuses) == 2
+    assert all([
+     isinstance(status, OCRStatusEnum) for status in statuses
+    ])
+
+
 def test_make_document_node():
     doc_node = make(DocumentNode)
 

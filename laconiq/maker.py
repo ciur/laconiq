@@ -7,18 +7,13 @@ from .generators import generate_for_type
 
 def make_one_enum(enum_klass):
     value = choice(list(enum_klass))
+
     return enum_klass(value)
 
 
 def make_enum(enum_klass, _quantity=1):
     if _quantity > 1:
-        result = []
-        for _ in range(0, _quantity):
-            result.append(
-                make_one_enum(enum_klass)
-            )
-
-        return result
+        return [make_one_enum(enum_klass) for _ in range(0, _quantity)]
 
     return make_one_enum(enum_klass)
 
