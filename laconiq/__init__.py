@@ -1,9 +1,11 @@
 import types
+from enum import Enum
+from random import choice
 
 from laconiq.generators import generate_for_type
 
 
-def generate_instance(model_klass, **desired_instance_attrs):
+def make_pydantic(model_klass, **desired_instance_attrs):
     """Generates one instance of given pydantic model class"""
 
     # model is considered pydantic if it has 'schema' class attr
@@ -22,13 +24,29 @@ def generate_instance(model_klass, **desired_instance_attrs):
                     value.get('format', None)
                 )
             else:
-                # e.g. $ref, which is not yet implemented
+                # e.g. $ref, 'allAll' which is not yet implemented
                 pass
 
     return model_klass(**attrs)
 
 
+def make_enum(enum_klass, _quantity=1):
+    if _quantity > 1:
+        result = []
+        for _ in range(0, _quantity):
+            value = choice(list(enum_klass))
+            result.append(enum_klass(value))
+
+        return result
+
+    value = choice(list(enum_klass))
+    return enum_klass(value)
+
+
 def make(model_klass, _quantity=1, **desired_instance_attrs):
+
+    if issubclass(model_klass, Enum):
+        return make_enum(model_klass, _quantity=_quantity)
 
     gen_attrs = {}
     result = []
@@ -42,9 +60,9 @@ def make(model_klass, _quantity=1, **desired_instance_attrs):
             for attr_name, _list in gen_attrs.items():
                 desired_instance_attrs[attr_name] = _list[idx]
             result.append(
-                generate_instance(model_klass, **desired_instance_attrs)
+                make_pydantic(model_klass, **desired_instance_attrs)
             )
 
         return result
 
-    return generate_instance(model_klass, **desired_instance_attrs)
+    return make_pydantic(model_klass, **desired_instance_attrs)

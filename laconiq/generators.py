@@ -26,6 +26,10 @@ def gen_email() -> str:
     return f'{gen_string(5)}@example.com'
 
 
+def gen_boolean() -> bool:
+    return choice([True, False])
+
+
 def generate_str(format: str) -> str | datetime | uuid.UUID:
     if format is None:
         return gen_string(10)
@@ -44,5 +48,7 @@ def generate_for_type(_type: str, _format: str | None = None):
         return generate_str(_format)
     elif _type == 'integer':
         return gen_integer()
+    elif _type == 'boolean':
+        return gen_boolean()
     else:
         raise ValueError(f"Unsupported type {_type}")
