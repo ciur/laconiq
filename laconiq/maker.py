@@ -1,4 +1,5 @@
 import types
+import typing
 from enum import Enum
 from random import choice
 
@@ -33,7 +34,17 @@ def make_one_pydantic(model_klass, **desired_instance_attrs):
         if prop in desired_instance_attrs.keys():
             attrs[prop] = desired_instance_attrs.get(prop)
         else:
+            if 'type' in value and value['type'] == 'array':
+                # is it an array?
+                klass_or_instance = model_klass.__annotations__[prop]
+                origs = typing.get_args(klass_or_instance)
+                if len(origs) > 1:
+                    raise ValueError("Multiple subscriptions not yet supported")
+                attrs[prop] = make(origs[0], _quantity=3)
+                continue
+
             if 'type' in value:
+                # is it a simple type? like str, uuid, int, email
                 attrs[prop] = generate_for_type(
                     value.get('type'),
                     value.get('format', None)
@@ -41,6 +52,7 @@ def make_one_pydantic(model_klass, **desired_instance_attrs):
                 continue
 
             if '$ref' in value.keys():
+                # is it a union?
                 klass_or_instance = model_klass.__annotations__[prop]
                 if isinstance(klass_or_instance, types.UnionType):
                     continue

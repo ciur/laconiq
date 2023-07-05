@@ -4,7 +4,7 @@ import pytest
 
 from laconiq import make
 
-from .schema import DocumentNode, Node, OCRStatusEnum, User
+from .schema import DocumentNode, Node, OCRStatusEnum, Tag, User
 
 
 def test_make():
@@ -46,6 +46,8 @@ def test_make_one_node():
     node = make(Node)
 
     assert isinstance(node, Node)
+    assert isinstance(node.tags, list)
+    assert isinstance(node.tags[0], Tag)
 
 
 def test_make_2_instances_with_custom_fields():
