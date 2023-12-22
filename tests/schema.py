@@ -3,7 +3,7 @@ from enum import Enum
 from typing import List
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr, validator
+from pydantic import BaseModel, EmailStr, field_validator
 
 
 class User(BaseModel):
@@ -47,11 +47,11 @@ class Node(BaseModel):
     tags: List[Tag]
     created_at: datetime
     updated_at: datetime
-    parent_id: UUID | None
+    parent_id: UUID | None = None
     user_id: UUID
     document: DocumentNode | None = None
 
-    @validator('document', pre=True)
+    @field_validator('document', mode='before')
     def document_validator(cls, value, values):
         if values['ctype'] == NodeType.document:
             return DocumentNode(

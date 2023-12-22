@@ -30,7 +30,7 @@ def make_one_pydantic(model_klass, **desired_instance_attrs):
 
     attrs = {}
 
-    for prop, value in model_klass.schema()['properties'].items():
+    for prop, value in model_klass.model_json_schema()['properties'].items():
         if prop in desired_instance_attrs.keys():
             attrs[prop] = desired_instance_attrs.get(prop)
         else:
